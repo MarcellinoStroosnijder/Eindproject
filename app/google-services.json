@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "215733937368",
+    "firebase_url": "https://eindprojectimtpmd.firebaseio.com",
+    "project_id": "eindprojectimtpmd",
+    "storage_bucket": "eindprojectimtpmd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215733937368:android:cac2e127736508d4",
+        "android_client_info": {
+          "package_name": "com.example.marcellino.keuzenvakkenapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215733937368-ds25v88i6gfk33es8pka5trlop49i740.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marcellino.keuzenvakkenapp",
+            "certificate_hash": "8c54611689b8a72887b72703803ea1d259652e52"
+          }
+        },
+        {
+          "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd86MTX7h8kD-BrhqhGs5xgca7TGg97eI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215733937368:android:ee38421f8ccdeb58",
+        "android_client_info": {
+          "package_name": "com.example.marcellino.keuzevakkenapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215733937368-ukib583s3utvre8ljm2kcmct19999nqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marcellino.keuzevakkenapp",
+            "certificate_hash": "8c54611689b8a72887b72703803ea1d259652e52"
+          }
+        },
+        {
+          "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd86MTX7h8kD-BrhqhGs5xgca7TGg97eI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215733937368-r6dkfv7sld27g4g34corleh23nk5q60g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
