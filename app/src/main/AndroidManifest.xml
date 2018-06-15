@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.marcellino.keuzevakkenapp">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -18,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".KeuzenvakkenScherm" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".VakScherm"></activity>
     </application>
 
 </manifest>
