@@ -1,8 +1,11 @@
 package com.example.marcellino.keuzevakkenapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.marcellino.keuzevakkenapp.Models.Vakken;
@@ -28,6 +31,10 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keuzenvakken_scherm);
 
+        final Button button = findViewById(R.id.button);
+        final TextView text2 = findViewById(R.id.textView3);
+        final TextView text3 = findViewById(R.id.textView4);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         VakkenRef = mDatabase.child("Vakken");
 
@@ -42,26 +49,19 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
                         postSnapshot.child("ID").getValue(),
                         postSnapshot.child("EC").getValue(),
                         postSnapshot.child("Periode").getValue(),
-                        postSnapshot.child("Plaatsen").getValue()
+                        postSnapshot.child("Plaatsen").getValue(),
+                        postSnapshot.child("Afkorting").getValue()
                     ));
-
-
                 }
+
                 for(int i = 0; i < VakkenLijst.size(); i++){
                     Log.d("vak", VakkenLijst.get(i).toString());
                 }
 
-                TextView text = findViewById(R.id.textView2);
-                TextView text2 = findViewById(R.id.textView3);
-                TextView text3 = findViewById(R.id.textView4);
-
-
-                text.setText(VakkenLijst.get(0).toString());
-                text2.setText(VakkenLijst.get(0).getEC().toString());
-                text3.setText(VakkenLijst.get(0).getPeriode().toString());
-
-
-            }
+                button.setText(VakkenLijst.get(1).getAfkorting().toString());
+                text2.setText(VakkenLijst.get(1).getPlekken().toString());
+                text3.setText(VakkenLijst.get(1).getPeriode().toString());
+                }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -71,5 +71,14 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
 
         VakkenRef.addValueEventListener(postListener);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(KeuzenvakkenScherm.this, VakScherm.class);
+                intent.putExtra("Object", VakkenLijst.get(1));
+
+                startActivity(intent);
+            }
+        });
     }
 }
