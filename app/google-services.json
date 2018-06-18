@@ -63,6 +63,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "215733937368-vdr66est40rn7rdbpnljuq2nu4l186fh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marcellino.keuzevakkenapp",
+            "certificate_hash": "d667d056b0841a6b659b21077a1576080205d26c"
+          }
+        },
+        {
           "client_id": "215733937368-ukib583s3utvre8ljm2kcmct19999nqk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

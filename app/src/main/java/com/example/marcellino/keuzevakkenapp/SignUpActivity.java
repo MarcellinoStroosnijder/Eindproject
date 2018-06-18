@@ -66,6 +66,9 @@ public class SignUpActivity extends AppCompatActivity {
                         mDatabase.child("Users").child(Name).child("Specialisatie").setValue(Specialisatie);
                         Log.d("Completion", "User in Database gezet");
 
+                        Intent GoToKeuzevakkenScreen = new Intent(SignUpActivity.this, KeuzenvakkenScherm.class);
+                        startActivity(GoToKeuzevakkenScreen);
+
                     } else{
                         Log.d("Foutcode", "Naam od ID niet ingevuld");
                     }

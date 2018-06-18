@@ -1,84 +1,114 @@
 package com.example.marcellino.keuzevakkenapp;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.marcellino.keuzevakkenapp.Models.Vakken;
+import com.example.marcellino.keuzevakkenapp.Models.Vak;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class KeuzenvakkenScherm extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private DatabaseReference VakkenRef;
     private DatabaseReference UserRef;
-    public  ArrayList<Vakken> VakkenLijst = new ArrayList<>();
+    private RecyclerView Vaklijst ;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keuzenvakken_scherm);
-
-        final Button button = findViewById(R.id.button);
-        final TextView text2 = findViewById(R.id.textView3);
-        final TextView text3 = findViewById(R.id.textView4);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        VakkenRef = mDatabase.child("Vakken");
+        Vaklijst = findViewById(R.id.Vaklijst);
+        VakkenRef = FirebaseDatabase.getInstance().getReference().child("Vakken");
+        mDatabase.keepSynced(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        Vaklijst.setHasFixedSize(true);
+        Vaklijst.setLayoutManager(linearLayoutManager);
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    VakkenLijst.add( new Vakken(
-                        postSnapshot.child("Naam").getValue(),
-                        postSnapshot.child("Moduleleider").getValue(),
-                        postSnapshot.child("Richting").getValue(),
-                        postSnapshot.child("ID").getValue(),
-                        postSnapshot.child("EC").getValue(),
-                        postSnapshot.child("Periode").getValue(),
-                        postSnapshot.child("Plaatsen").getValue(),
-                        postSnapshot.child("Afkorting").getValue()
-                    ));
-                }
 
-                for(int i = 0; i < VakkenLijst.size(); i++){
-                    Log.d("vak", VakkenLijst.get(i).toString());
-                }
+    }
 
-                button.setText(VakkenLijst.get(1).getAfkorting().toString());
-                text2.setText(VakkenLijst.get(1).getPlekken().toString());
-                text3.setText(VakkenLijst.get(1).getPeriode().toString());
-                }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Vak, VakViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Vak, VakViewHolder>(
+
+                Vak.class,
+                R.layout.vakkaart,
+                VakViewHolder.class,
+                VakkenRef) {
+
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("Foutcode", "Er is iets misgegaan met het ophalen van de data");
+            protected void populateViewHolder(final VakViewHolder viewHolder, final Vak model, int position) {
+
+                viewHolder.setAfkorting(model.getAfkorting());
+                viewHolder.setPeriode(model.getPeriode());
+                viewHolder.setPlaatsen(model.getPlaatsen());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(KeuzenvakkenScherm.this, VakScherm.class);
+                        Bundle b = new Bundle();
+                        b.putString("Naam", model.getAfkorting()); 	// Your id
+                        intent.putExtras(b); 	// Put your id to your next Intent
+                        startActivity(intent);	// start
+                    }
+                });
             }
         };
+        Vaklijst.setAdapter(firebaseRecyclerAdapter);
 
-        VakkenRef.addValueEventListener(postListener);
+    }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(KeuzenvakkenScherm.this, VakScherm.class);
-                intent.putExtra("Object", VakkenLijst.get(1));
+    public static class VakViewHolder extends RecyclerView.ViewHolder{
 
-                startActivity(intent);
-            }
-        });
+        View mView;
+        Button VakButton;
+
+
+        public VakViewHolder(View itemView){
+            super(itemView);
+            mView = itemView;
+            VakButton = mView.findViewById(R.id.VakButton);
+        }
+
+        public void setPeriode(String Periode){
+            TextView periode = mView.findViewById(R.id.Periode);
+            periode.setText(Periode);
+        }
+
+        public void setPlaatsen(int Plaatsen){
+            TextView plaatsen = mView.findViewById(R.id.Plaatsen);
+            plaatsen.setText(String.valueOf(Plaatsen));
+        }
+
+        public void setAfkorting(String Afkorting){
+            VakButton.setText(Afkorting);
+        }
+
     }
 }

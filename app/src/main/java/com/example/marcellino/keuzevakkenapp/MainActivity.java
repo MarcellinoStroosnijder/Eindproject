@@ -3,6 +3,7 @@ package com.example.marcellino.keuzevakkenapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 String Email = EmailTxt.getText().toString();
                 String Password = PasswordTxt.getText().toString();
 
-                if (Email != "" || Password != "") {
+                if (!TextUtils.isEmpty(Email)|| !TextUtils.isEmpty(Password)) {
                     mAuth.signInWithEmailAndPassword(Email, Password);
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

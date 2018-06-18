@@ -1,38 +1,38 @@
 package com.example.marcellino.keuzevakkenapp;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.example.marcellino.keuzevakkenapp.Models.Vakken;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class VakScherm extends AppCompatActivity {
 
     private PieChart mChart;
-    public static final int MAX_ECTS = 60;
-    public static int currentEcts = 0;
+    public static final int Leeg = 0;
+    int plekken;
+    private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vak_scherm);
-
-        Bundle data;
-        data = getIntent().getExtras();
-        Vakken vak =  data.getParcelable("Object");
-
-        Log.d("test", vak.getNaam().toString());
 
         mChart = findViewById(R.id.chart);
         mChart.setDescription(" description ");
@@ -42,51 +42,72 @@ public class VakScherm extends AppCompatActivity {
         mChart.setTransparentCircleColor(Color.rgb(130, 130, 130));
         mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
 
-        setData(0);
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            String value = b.getString("Naam");
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("Vakken").child(value);
+        }
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                plekken = dataSnapshot.child("Plaatsen").getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
+
+        setData(0, plekken);
 
         Button fab = findViewById(R.id.plusTweeTest);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentEcts < MAX_ECTS) {
-                    setData(currentEcts += 2);
+                if (plekken > Leeg) {
+                    mDatabase.child("Plaatsen").setValue(plekken - 1);
+                    setData(0, plekken);
                 } else {
-                    setData(currentEcts = 0);
+                    Toast.makeText(VakScherm.this, "Keuzevak is vol", Toast.LENGTH_SHORT).show();
+                    setData(0, plekken);
                 }
             }
         });
     }
 
-    private void setData(int aantal) {
-        currentEcts = aantal;
+    private void setData(int aantal, int plekken) {
+        aantal = 24;
+
         ArrayList<Entry> yValues = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        yValues.add(new Entry(aantal, 0));
-        xValues.add("Behaalde ECTS");
+        yValues.add(new Entry(aantal - plekken, 0));
+        xValues.add("Plekken ingenomen");
 
-        yValues.add(new Entry(60 - currentEcts, 1));
-        xValues.add("Resterende ECTS");
+        yValues.add(new Entry(plekken, 1));
+        xValues.add("Plekken Vrij");
+
+        Log.d("test", String.valueOf(plekken));
 
         //  http://www.materialui.co/colors
         ArrayList<Integer> colors = new ArrayList<>();
-        if (currentEcts <10) {
-            colors.add(Color.rgb(244,81,30));
-        } else if (currentEcts < 40){
-            colors.add(Color.rgb(235,0,0));
-        } else if  (currentEcts < 50) {
-            colors.add(Color.rgb(253,216,53));
-        } else {
+        if (plekken > 15) {
             colors.add(Color.rgb(67,160,71));
+        } else if (plekken > 7){
+            colors.add(Color.rgb(253,216,53));
+        } else if  (plekken < 8) {
+            colors.add(Color.rgb(255,0,0));
         }
-        colors.add(Color.rgb(255,0,0));
 
-        PieDataSet dataSet = new PieDataSet(yValues, "ECTS");
+        PieDataSet dataSet = new PieDataSet(yValues, "Plekken");
         dataSet.setColors(colors);
 
         PieData data = new PieData(xValues, dataSet);
         mChart.setData(data); // bind dataset aan chart.
         mChart.invalidate();  // Aanroepen van een redraw
-        Log.d("aantal =", ""+currentEcts);
     }
 }
