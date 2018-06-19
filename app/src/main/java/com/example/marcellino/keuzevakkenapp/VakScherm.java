@@ -27,7 +27,7 @@ public class VakScherm extends AppCompatActivity {
     public static final int Leeg = 0;
     int plekken;
     private DatabaseReference mDatabase;
-
+    ArrayList<Entry> yValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,8 @@ public class VakScherm extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 plekken = dataSnapshot.child("Plaatsen").getValue(Integer.class);
+                Log.d("test", "ik heb geluisterd");
+                setData(0, plekken);
             }
 
             @Override
@@ -61,8 +63,6 @@ public class VakScherm extends AppCompatActivity {
             }
         };
         mDatabase.addValueEventListener(postListener);
-
-        setData(0, plekken);
 
         Button fab = findViewById(R.id.plusTweeTest);
         fab.setOnClickListener(new View.OnClickListener() {

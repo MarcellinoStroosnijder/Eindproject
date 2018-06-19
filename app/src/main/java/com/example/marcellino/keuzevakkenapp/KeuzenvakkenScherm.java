@@ -1,28 +1,18 @@
 package com.example.marcellino.keuzevakkenapp;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.marcellino.keuzevakkenapp.Models.Vak;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-
-import java.util.ArrayList;
 
 public class KeuzenvakkenScherm extends AppCompatActivity {
 
@@ -30,9 +20,6 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
     private DatabaseReference VakkenRef;
     private DatabaseReference UserRef;
     private RecyclerView Vaklijst ;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +50,18 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
 
             @Override
             protected void populateViewHolder(final VakViewHolder viewHolder, final Vak model, int position) {
-
                 viewHolder.setAfkorting(model.getAfkorting());
                 viewHolder.setPeriode(model.getPeriode());
                 viewHolder.setPlaatsen(model.getPlaatsen());
 
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.VakButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(KeuzenvakkenScherm.this, VakScherm.class);
                         Bundle b = new Bundle();
-                        b.putString("Naam", model.getAfkorting()); 	// Your id
-                        intent.putExtras(b); 	// Put your id to your next Intent
-                        startActivity(intent);	// start
+                        b.putString("Naam", model.getAfkorting());
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
                 });
             }
