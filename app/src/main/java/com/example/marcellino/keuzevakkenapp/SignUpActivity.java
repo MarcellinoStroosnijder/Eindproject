@@ -1,17 +1,21 @@
 package com.example.marcellino.keuzevakkenapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -46,35 +50,38 @@ public class SignUpActivity extends AppCompatActivity {
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String Email = EmailTxt.getText().toString();
-                String Password = PasswordTxt.getText().toString();
-                String Name = NameTxt.getText().toString();
-                String SchoolId = SchoolIDTxt.getText().toString();
-                Boolean Propedeuse = PropedeuseSwt.isChecked();
-                String Specialisatie = dropdown.getSelectedItem().toString();
+                final String Email = EmailTxt.getText().toString();
+                final String Password = PasswordTxt.getText().toString();
+                final String Name = NameTxt.getText().toString();
+                final String SchoolId = SchoolIDTxt.getText().toString();
+                final Boolean Propedeuse = PropedeuseSwt.isChecked();
+                final String Specialisatie = dropdown.getSelectedItem().toString();
 
                 if (!EmailTxt.getText().toString().matches("")|| !PasswordTxt.getText().toString().matches("")) {
-                    mAuth.createUserWithEmailAndPassword(Email, Password);
-                    Log.d("Completion", "User Aangemaakt");
+                    if (!NameTxt.getText().toString().matches("") || !SchoolIDTxt.getText().toString().matches("")) {
+                        mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
 
-                    if(!NameTxt.getText().toString().matches("")|| !SchoolIDTxt.getText().toString().matches("")){
-                        mDatabase.child("Users").child(Name).child("Name").setValue(Name);
-                        mDatabase.child("Users").child(Name).child("ID").setValue(SchoolId);
-                        mDatabase.child("Users").child(Name).child("Email").setValue(Email);
-                        mDatabase.child("Users").child(Name).child("Propedeuse").setValue(Propedeuse);
-                        mDatabase.child("Users").child(Name).child("Specialisatie").setValue(Specialisatie);
-                        Log.d("Completion", "User in Database gezet");
+                                    mDatabase.child("Users").child(Name).child("Name").setValue(Name);
+                                    mDatabase.child("Users").child(Name).child("ID").setValue(SchoolId);
+                                    mDatabase.child("Users").child(Name).child("Email").setValue(Email);
+                                    mDatabase.child("Users").child(Name).child("Propedeuse").setValue(Propedeuse);
+                                    mDatabase.child("Users").child(Name).child("Specialisatie").setValue(Specialisatie);
+                                    Log.d("Completion", "User in Database gezet");
 
-                        Intent GoToKeuzevakkenScreen = new Intent(SignUpActivity.this, KeuzenvakkenScherm.class);
-                        startActivity(GoToKeuzevakkenScreen);
-
-                    } else{
-                        Log.d("Foutcode", "Naam od ID niet ingevuld");
+                                    Intent GoToKeuzevakkenScherm = new Intent(SignUpActivity.this, KeuzenvakkenScherm.class);
+                                    startActivity(GoToKeuzevakkenScherm);
+                                }
+                            }
+                        });
                     }
-
+                    else {
+                        Toast.makeText(SignUpActivity.this, "Naam of ID is leeg!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Log.d("Foutcode", "Email of Wachtwoord is leeg" + Email + " " + Password);
+                    Toast.makeText(SignUpActivity.this, "Email of Wachtwoord is leeg!", Toast.LENGTH_LONG).show();
                 }
             }
         });
