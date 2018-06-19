@@ -64,11 +64,11 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
 
-                                    mDatabase.child("Users").child(Name).child("Name").setValue(Name);
-                                    mDatabase.child("Users").child(Name).child("ID").setValue(SchoolId);
-                                    mDatabase.child("Users").child(Name).child("Email").setValue(Email);
-                                    mDatabase.child("Users").child(Name).child("Propedeuse").setValue(Propedeuse);
-                                    mDatabase.child("Users").child(Name).child("Specialisatie").setValue(Specialisatie);
+                                    mDatabase.child("Users").child(mAuth.getUid()).child("Name").setValue(Name);
+                                    mDatabase.child("Users").child(mAuth.getUid()).child("ID").setValue(SchoolId);
+                                    mDatabase.child("Users").child(mAuth.getUid()).child("Email").setValue(Email);
+                                    mDatabase.child("Users").child(mAuth.getUid()).child("Propedeuse").setValue(Propedeuse);
+                                    mDatabase.child("Users").child(mAuth.getUid()).child("Specialisatie").setValue(Specialisatie);
                                     Log.d("Completion", "User in Database gezet");
 
                                     Intent GoToKeuzevakkenScherm = new Intent(SignUpActivity.this, KeuzenvakkenScherm.class);

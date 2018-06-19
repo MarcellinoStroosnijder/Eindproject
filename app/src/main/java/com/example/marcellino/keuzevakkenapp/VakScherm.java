@@ -1,11 +1,13 @@
 package com.example.marcellino.keuzevakkenapp;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -13,6 +15,8 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,16 +27,39 @@ import java.util.ArrayList;
 
 public class VakScherm extends AppCompatActivity {
 
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
+    private DatabaseReference InschrijvingRef;
+    private DatabaseReference VakRef;
+
     private PieChart mChart;
     public static final int Leeg = 0;
+
     int plekken;
-    private DatabaseReference mDatabase;
+    int id;
+    String periode;
+
+
     ArrayList<Entry> yValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vak_scherm);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        InschrijvingRef = mDatabase.child("Inschrijvingen");
+        VakRef = mDatabase.child("Vakken");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String UserId = user.getUid();
+
+        final TextView NaamTxt = findViewById(R.id.textView2);
+        final TextView ModuleleiderTxt = findViewById(R.id.textView4);
+        final TextView SpecialisatieTxt = findViewById(R.id.textView3);
+        final TextView PeriodeTxt = findViewById(R.id.textView5);
+        final TextView PlaatsenTxt = findViewById(R.id.textView6);
+        final Button InschrijvenBtn = findViewById(R.id.Inschrijven);
 
         mChart = findViewById(R.id.chart);
         mChart.setDescription(" description ");
@@ -52,6 +79,19 @@ public class VakScherm extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 plekken = dataSnapshot.child("Plaatsen").getValue(Integer.class);
+                String Moduleleider = dataSnapshot.child("Moduleleider").getValue().toString();
+                periode = dataSnapshot.child("Periode").getValue().toString();
+                String Naam = dataSnapshot.child("Naam").getValue().toString();
+                String Richting = dataSnapshot.child("Richting").getValue().toString();
+                id = dataSnapshot.child("ID").getValue(Integer.class);
+
+
+                NaamTxt.setText("Naam: " + Naam);
+                ModuleleiderTxt.setText("Moduleleider: " + Moduleleider);
+                SpecialisatieTxt.setText("Richting: " + Richting);
+                PeriodeTxt.setText("Periode: " + periode);
+                PlaatsenTxt.setText("Plekken: " + plekken);
+
                 Log.d("test", "ik heb geluisterd");
                 setData(0, plekken);
             }
@@ -64,19 +104,34 @@ public class VakScherm extends AppCompatActivity {
         };
         mDatabase.addValueEventListener(postListener);
 
-        Button fab = findViewById(R.id.plusTweeTest);
-        fab.setOnClickListener(new View.OnClickListener() {
+        InschrijvenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (plekken > Leeg) {
-                    mDatabase.child("Plaatsen").setValue(plekken - 1);
-                    setData(0, plekken);
-                } else {
-                    Toast.makeText(VakScherm.this, "Keuzevak is vol", Toast.LENGTH_SHORT).show();
-                    setData(0, plekken);
-                }
+            public void onClick(View v) {
+                //InschrijvingRef.child(UserId).child("Periode").child("Keuze").child("VakId").setValue(id);
+                InschrijvingRef.child(UserId).child("VakId").setValue(id);
+                InschrijvingRef.child(UserId).child("Keuze").setValue("1");
+                InschrijvingRef.child(UserId).child("Periode").setValue(periode);
+
+                Intent intent = new Intent(VakScherm.this, KeuzenvakkenScherm.class);
+                Toast.makeText(VakScherm.this , "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+
             }
         });
+
+//        Button fab = findViewById(R.id.plusTweeTest);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (plekken > Leeg) {
+//                    mDatabase.child("Plaatsen").setValue(plekken - 1);
+//                    setData(0, plekken);
+//                } else {
+//                    Toast.makeText(VakScherm.this, "Keuzevak is vol", Toast.LENGTH_SHORT).show();
+//                    setData(0, plekken);
+//                }
+//            }
+//        });
     }
 
     private void setData(int aantal, int plekken) {
