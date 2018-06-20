@@ -19,7 +19,7 @@ public class popup extends AppCompatActivity {
     private String UserId;
     private String Periode;
     private String Afkorting;
-    private int VakId;
+    private Integer VakId;
     private int Plekken;
     private Integer KeuzeEen;
     private Integer KeuzeTwee;
@@ -53,13 +53,12 @@ public class popup extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         getWindow().setLayout((int) (width * .8), (int) (height * .6));
+
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 KeuzeEen = dataSnapshot.child(UserId).child(Periode).child("Keuze 1").child("VakId").getValue(Integer.class);
                 KeuzeTwee = dataSnapshot.child(UserId).child(Periode).child("Keuze 2").child("VakId").getValue(Integer.class);
-
-                Toast.makeText(popup.this, String.valueOf(KeuzeEen) + " " + String.valueOf(KeuzeTwee), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -70,6 +69,8 @@ public class popup extends AppCompatActivity {
         };
         InschrijvingRef.addValueEventListener(postListener);
 
+
+
         Keuze1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,11 +79,34 @@ public class popup extends AppCompatActivity {
                     Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
                     startActivity(intent);
                 } else{
-                    InschrijvingRef.child(UserId).child(Periode).child("Keuze 1").child("VakId").setValue(VakId);
-                    mDatabase.child("Vakken").child(Afkorting).child("Plaatsen").setValue(Plekken - 1);
-                    Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
-                    Toast.makeText(popup.this , "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
+                    if(KeuzeEen == null) { //Kijkt of gebruiker niet al is ingeschreven
+                        InschrijvingRef.child(UserId).child(Periode).child("Keuze 1").child("VakId").setValue(VakId);
+                        mDatabase.child("Vakken").child(String.valueOf(VakId)).child("Plaatsen").setValue(Plekken - 1);
+                        Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
+                        Toast.makeText(popup.this , "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                    } else {
+                        ValueEventListener postListener2 = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int plekkenEen = dataSnapshot.child("Plaatsen").getValue(int.class);
+                                InschrijvingRef.child(UserId).child(Periode).child("Keuze 1").child("VakId").setValue(VakId);
+                                mDatabase.child("Vakken").child(String.valueOf(VakId)).child("Plaatsen").setValue(Plekken - 1);
+                                mDatabase.child("Vakken").child(String.valueOf(KeuzeEen)).child("Plaatsen").setValue(plekkenEen + 1);
+                                //Toast.makeText(popup.this, "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                // ...
+                            }
+                        };
+
+                        mDatabase.child("Vakken").child(String.valueOf(KeuzeEen)).addListenerForSingleValueEvent(postListener2);
+                    }
                 }
             }
         });
@@ -90,16 +114,41 @@ public class popup extends AppCompatActivity {
         Keuze2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(KeuzeEen != VakId || KeuzeTwee != VakId) {
+                if(KeuzeEen == VakId || KeuzeTwee == VakId) {
                     Toast.makeText(popup.this , "Al ingeschreven voor dit vak!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
                     startActivity(intent);
                 } else{
-                    InschrijvingRef.child(UserId).child(Periode).child("1").child("VakId").setValue(VakId);
-                    mDatabase.child("Vakken").child(Afkorting).child("Plaatsen").setValue(Plekken - 1);
-                    Toast.makeText(popup.this , "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
-                    startActivity(intent);
+                    if(KeuzeTwee == null) { //Kijkt of gebruiker niet al is ingeschreven
+                        InschrijvingRef.child(UserId).child(Periode).child("Keuze 2").child("VakId").setValue(VakId);
+                        mDatabase.child("Vakken").child(String.valueOf(VakId)).child("Plaatsen").setValue(Plekken - 1);
+                        Toast.makeText(popup.this, "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
+                        startActivity(intent);
+                    } else{
+                        ValueEventListener postListener3 = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int plekkenTwee = dataSnapshot.child("Plaatsen").getValue(int.class);
+                                InschrijvingRef.child(UserId).child(Periode).child("Keuze 2").child("VakId").setValue(VakId);
+                                mDatabase.child("Vakken").child(String.valueOf(VakId)).child("Plaatsen").setValue(Plekken - 1);
+                                mDatabase.child("Vakken").child(String.valueOf(KeuzeTwee)).child("Plaatsen").setValue(plekkenTwee + 1);
+                                //Toast.makeText(popup.this, "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(popup.this, KeuzenvakkenScherm.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                // ...
+                            }
+                        };
+
+                        mDatabase.child("Vakken").child(String.valueOf(KeuzeTwee)).addListenerForSingleValueEvent(postListener3);
+
+
+                    }
                 }
 
             }
