@@ -71,8 +71,8 @@ public class VakScherm extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         if(b != null) {
-            String value = b.getString("Naam");
-            mDatabase = FirebaseDatabase.getInstance().getReference().child("Vakken").child(value);
+            int value = b.getInt("ID");
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("Vakken").child(String.valueOf(value));
         }
 
         ValueEventListener postListener = new ValueEventListener() {

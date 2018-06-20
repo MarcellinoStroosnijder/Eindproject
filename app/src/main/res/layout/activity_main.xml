@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="81dp"
+    android:background="@color/colorBackground" >
 
     <EditText
         android:id="@+id/EmailTxt"
@@ -48,6 +49,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
         android:text="Hogeschool Leiden"
+        android:textColor="@android:color/black"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/EmailTxt"
         app:layout_constraintEnd_toEndOf="parent"

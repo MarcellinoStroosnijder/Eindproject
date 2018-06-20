@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">KeuzevakkenApp</string>
+    <string name="app_name">Keuzevakken</string>
+    <string name="action_settings">Logout</string>
 </resources>
