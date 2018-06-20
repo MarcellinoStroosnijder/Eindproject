@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                Toast.makeText(MainActivity.this, "Welcome!", Toast.LENGTH_LONG).show();
                                 Intent GoToKeuzevakkenScrem = new Intent(MainActivity.this, KeuzenvakkenScherm.class);
                                 startActivity(GoToKeuzevakkenScrem);
                             } else {

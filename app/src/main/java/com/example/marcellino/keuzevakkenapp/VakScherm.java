@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,6 +37,7 @@ public class VakScherm extends AppCompatActivity {
     int plekken;
     int id;
     String periode;
+    String Afkorting;
 
 
     ArrayList<Entry> yValues;
@@ -83,6 +83,7 @@ public class VakScherm extends AppCompatActivity {
                 periode = dataSnapshot.child("Periode").getValue().toString();
                 String Naam = dataSnapshot.child("Naam").getValue().toString();
                 String Richting = dataSnapshot.child("Richting").getValue().toString();
+                Afkorting = dataSnapshot.child("Afkorting").getValue().toString();
                 id = dataSnapshot.child("ID").getValue(Integer.class);
 
 
@@ -107,14 +108,15 @@ public class VakScherm extends AppCompatActivity {
         InschrijvenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //InschrijvingRef.child(UserId).child("Periode").child("Keuze").child("VakId").setValue(id);
-                InschrijvingRef.child(UserId).child("VakId").setValue(id);
-                InschrijvingRef.child(UserId).child("Keuze").setValue("1");
-                InschrijvingRef.child(UserId).child("Periode").setValue(periode);
-
-                Intent intent = new Intent(VakScherm.this, KeuzenvakkenScherm.class);
-                Toast.makeText(VakScherm.this , "Inschrijving voltooid", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+               Intent intent = new Intent(VakScherm.this, popup.class);
+               Bundle b = new Bundle();
+               b.putString("UserID", UserId);
+               b.putString("Periode", periode);
+               b.putString("Afkorting", Afkorting);
+               b.putInt("VakId", id);
+               b.putInt("Plekken", plekken);
+               intent.putExtras(b);
+               startActivity(intent);
 
             }
         });

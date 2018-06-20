@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".KeuzenvakkenScherm" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".VakScherm"></activity>
+        <activity android:name=".VakScherm" />
+        <activity android:name=".popup" android:theme="@style/AppTheme.popThema"></activity>
     </application>
 
 </manifest>
