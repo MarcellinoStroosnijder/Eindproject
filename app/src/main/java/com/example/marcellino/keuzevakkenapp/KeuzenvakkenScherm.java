@@ -2,6 +2,7 @@ package com.example.marcellino.keuzevakkenapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +39,9 @@ public class KeuzenvakkenScherm extends AppCompatActivity {
             case R.id.action_settings:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(KeuzenvakkenScherm.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                KeuzenvakkenScherm.this.finish();
             default:
                 break;
         }

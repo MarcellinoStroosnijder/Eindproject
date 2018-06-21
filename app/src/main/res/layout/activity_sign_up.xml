@@ -10,7 +10,7 @@
         android:id="@+id/Name"
         android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="52dp"
         android:layout_marginTop="28dp"
         android:ems="10"
         android:hint="Name"
@@ -20,21 +20,21 @@
 
     <EditText
         android:id="@+id/ID"
-        android:layout_width="132dp"
+        android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginBottom="-2dp"
+        android:layout_marginStart="52dp"
         android:ems="10"
         android:hint="School ID"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/Propedeuse"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name"
-        app:layout_constraintVertical_bias="0.492" />
+        app:layout_constraintVertical_bias="0.507" />
 
     <Switch
         android:id="@+id/Propedeuse"
-        android:layout_width="241dp"
+        android:layout_width="276dp"
         android:layout_height="41dp"
         android:layout_marginTop="256dp"
         android:text="Propedeuse"
@@ -70,36 +70,36 @@
 
     <EditText
         android:id="@+id/EmailTxt"
-        android:layout_width="135dp"
+        android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/PasswordTxt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toEndOf="@+id/Name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/PasswordTxt"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="72dp"
+        android:layout_width="134dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="64dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/Propedeuse"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintStart_toEndOf="@+id/ID" />
+        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintStart_toEndOf="@+id/ID"
+        app:layout_constraintTop_toBottomOf="@+id/EmailTxt"
+        app:layout_constraintVertical_bias="0.883" />
 
 
 </android.support.constraint.ConstraintLayout>

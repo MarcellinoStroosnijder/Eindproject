@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +46,28 @@ public class VakScherm extends AppCompatActivity {
     ArrayList<Entry> yValues;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_items, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(VakScherm.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                VakScherm.this.finish();
+            default:
+                break;
+        }
+        return true;
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vak_scherm);
@@ -58,11 +83,10 @@ public class VakScherm extends AppCompatActivity {
         final TextView ModuleleiderTxt = findViewById(R.id.textView4);
         final TextView SpecialisatieTxt = findViewById(R.id.textView3);
         final TextView PeriodeTxt = findViewById(R.id.textView5);
-        final TextView PlaatsenTxt = findViewById(R.id.textView6);
         final Button InschrijvenBtn = findViewById(R.id.Inschrijven);
 
         mChart = findViewById(R.id.chart);
-        mChart.setDescription(" description ");
+        mChart.setDescription("");
         mChart.setTouchEnabled(false);
         mChart.setDrawSliceText(true);
         mChart.getLegend().setEnabled(false);
@@ -91,7 +115,6 @@ public class VakScherm extends AppCompatActivity {
                 ModuleleiderTxt.setText("Moduleleider: " + Moduleleider);
                 SpecialisatieTxt.setText("Richting: " + Richting);
                 PeriodeTxt.setText("Periode: " + periode);
-                PlaatsenTxt.setText("Plekken: " + plekken);
 
                 Log.d("test", "ik heb geluisterd");
                 setData(0, plekken);
@@ -121,19 +144,6 @@ public class VakScherm extends AppCompatActivity {
             }
         });
 
-//        Button fab = findViewById(R.id.plusTweeTest);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (plekken > Leeg) {
-//                    mDatabase.child("Plaatsen").setValue(plekken - 1);
-//                    setData(0, plekken);
-//                } else {
-//                    Toast.makeText(VakScherm.this, "Keuzevak is vol", Toast.LENGTH_SHORT).show();
-//                    setData(0, plekken);
-//                }
-//            }
-//        });
     }
 
     private void setData(int aantal, int plekken) {
@@ -152,15 +162,11 @@ public class VakScherm extends AppCompatActivity {
 
         //  http://www.materialui.co/colors
         ArrayList<Integer> colors = new ArrayList<>();
-        if (plekken > 15) {
-            colors.add(Color.rgb(67,160,71));
-        } else if (plekken > 7){
-            colors.add(Color.rgb(253,216,53));
-        } else if  (plekken < 8) {
-            colors.add(Color.rgb(255,0,0));
-        }
+        colors.add(Color.rgb(255,115,115));
+        colors.add(Color.rgb(98,218,98));
 
         PieDataSet dataSet = new PieDataSet(yValues, "Plekken");
+        dataSet.setValueTextSize(7f);
         dataSet.setColors(colors);
 
         PieData data = new PieData(xValues, dataSet);

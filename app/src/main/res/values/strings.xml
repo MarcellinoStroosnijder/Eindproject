@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Keuzevakken</string>
     <string name="action_settings">Logout</string>
+    <string name="inschrijf_name">Inschrijven</string>
 </resources>
